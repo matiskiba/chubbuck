@@ -1,0 +1,22 @@
+<span contenteditable="false" *ngIf="bitLine.first" class="bitRole bitRoleMarker" [attr.data-chunkid]="bitChunkComponent.bitChunk.chunkId">/</span>
+
+<context-menu #context>
+  <ng-template contextMenuItem let-item>
+    mati
+  </ng-template>
+</context-menu>
+
+<span [contextMenu]="context">
+  <ng-container *ngFor="let part of bitLine.content">
+    <ng-container *ngIf="part.constructor.name == 'BitWord'">
+      <span class="app-bit-word">{{part.value}}</span>
+    </ng-container>
+    <ng-container *ngIf="part.constructor.name == 'BitPunctuation'">
+      <span class="app-bit-punctuation">{{part.value}}</span>
+    </ng-container>
+    <ng-container *ngIf="part.constructor.name == 'BitSubstitution'">
+      <app-bit-substitution contenteditable="false" [bitSubstitution]="part" [attr.data-substitutionid]="part.substitutionId">
+      </app-bit-substitution>
+    </ng-container>
+  </ng-container>
+</span>

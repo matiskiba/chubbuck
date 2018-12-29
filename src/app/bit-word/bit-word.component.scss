@@ -1,0 +1,31 @@
+::ng-deep app-bit-word + app-bit-word:before {
+  content:"";
+  margin-right:0.2em;
+}
+
+::ng-deep app-bit-word + app-bit-substitution:before {
+  content:"";
+  margin-right:0.2em;
+}
+
+::ng-deep app-bit-punctuation + app-bit-word:before {
+  content:"";
+  margin-right:0.2em;
+  display:inline-block;
+}
+
+:host.focused {
+  background-color:rgba(0,0,200,0.3);
+}
+
+:host.substitution {
+  padding-top:1em;
+}
+
+:host {
+  display:inline-block;
+}
+
+.substitution {
+  border-right:1px solid black;
+}

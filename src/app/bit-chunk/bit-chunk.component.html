@@ -1,0 +1,36 @@
+<div class="obstacles">
+  <ng-container *ngIf="!bitChunk">
+    מכשולים
+  </ng-container>
+  <ng-container *ngIf="bitChunk">
+    <textarea>{{appComponent.collection.obstacles[bitChunk.chunkId]}}</textarea>
+  </ng-container>
+</div>
+<div class="scene">
+  <ng-container *ngIf="!bitChunk">
+    סצנה
+  </ng-container>
+  <div contenteditable="true" spellcheck="false">
+    <ng-container *ngIf="bitChunk">
+      <ng-container *ngFor="let bitRole of bitChunk.roles">
+        <app-bit-role [bitRole]="bitRole"></app-bit-role>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
+<div class="actions">
+  <ng-container *ngIf="!bitChunk">
+    פעולות
+  </ng-container>
+  <ng-container *ngIf="bitChunk">
+    <textarea>{{appComponent.collection.actions[bitChunk.chunkId]}}</textarea>
+  </ng-container>
+</div>
+<div class="doings">
+  <ng-container *ngIf="!bitChunk">
+    doings
+  </ng-container>
+  <ng-container *ngIf="bitChunk">
+    <textarea>{{appComponent.collection.doings[bitChunk.chunkId]}}</textarea>
+  </ng-container>
+</div>

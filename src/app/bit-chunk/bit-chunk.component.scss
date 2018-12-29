@@ -1,0 +1,70 @@
+:host {
+  border-bottom:1px dashed black;
+
+  display:block;
+
+  direction:rtl;
+
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-align-content: stretch;
+  -ms-flex-line-pack: stretch;
+  align-content: stretch;
+}
+
+:host:first-child {
+  border-bottom:1px solid black;
+}
+
+.obstacles {
+  flex-basis:15%;
+  flex-shrink:0;
+  border-left:1px solid black;
+  padding-left:5px;
+  padding-right:5px;
+}
+
+.scene {
+  flex-basis:50%;
+  flex-shrink:0;
+  border-left:1px solid black;
+  padding-left:5px;
+  padding-right:5px;
+}
+
+.actions {
+  flex-basis:15%;
+  flex-shrink:0;
+  border-left:1px solid black;
+  padding-left:5px;
+  padding-right:5px;
+}
+
+.doings {
+  flex-basis:20%;
+  flex-shrink:0;
+  padding-left:5px;
+  padding-right:5px;
+}
+
+textarea {
+  width:100%;
+  min-height:calc(100% - 1px);
+  border:none;
+  box-sizing:border-box;
+  outline:none;
+}
+
+[contenteditable] {
+  outline:none;
+}

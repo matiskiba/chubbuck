@@ -1,0 +1,38 @@
+:host {
+  display:block;
+}
+
+:host:not(:last-child) {
+  margin-bottom:0.5em;
+}
+
+.bitRoleMarker {
+  color:black;
+  font-size:30px;
+}
+
+.bitRoleMarker:after {
+  font-size:11px;
+  content:" ";
+}
+
+::ng-deep .app-bit-word + .app-bit-word:before {
+  content:"";
+  margin-right:0.2em;
+}
+
+::ng-deep .app-bit-word + .app-bit-substitution:before {
+  content:"";
+  margin-right:0.2em;
+}
+
+::ng-deep .app-bit-punctuation + :before {
+  content:"";
+  margin-right:0.2em;
+  display:inline-block;
+}
+
+.app-bit-punctuation,
+.app-bit-word {
+  display:inline-block;
+}

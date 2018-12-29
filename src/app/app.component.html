@@ -1,6 +1,27 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<textarea [(ngModel)]="raw">
-  enter text here
-</textarea>
-<button (click)="handleUpdateRaw()"></button>
+<div class="buttons">
+  <textarea [(ngModel)]="raw">
+  </textarea>
+  <button (click)="handleUpdateRaw()">handle raw</button>
+  <button (click)="generateRaw(chunk)">generate raw</button>
+  <div class="role">
+    תפקיד:
+    <input #val0 (change)="updateRole(val0.value)" [value]="collection.role">
+  </div>
+  <div class="majorNeed">
+    צורך על:
+    <input #val1 (change)="updateMajorNeed(val1.value)" [value]="collection.majorNeed">
+  </div>
+  <div class="sceneObjective">
+    מטרת הסצנה:
+    <textarea #val2 (change)="updateSceneObjective(val2.value)" [value]="collection.sceneObjective"></textarea>
+  </div>
+</div>
+
+<div #chunk *ngIf="collection">
+  <app-bit-chunk [bitChunk]="null" class="header"></app-bit-chunk>
+  <ng-container *ngFor="let chunk of collection.chunks">
+    <app-bit-chunk [bitChunk]="chunk"></app-bit-chunk>
+  </ng-container>
+</div>
+
 <router-outlet></router-outlet>

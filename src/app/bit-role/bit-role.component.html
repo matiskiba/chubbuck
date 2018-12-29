@@ -1,0 +1,8 @@
+<ng-container *ngIf="bitRole.first">
+  <span class="bitRole bitRoleName">
+    {{bitRole.role}}
+  </span>
+</ng-container>
+<ng-container *ngFor="let line of bitRole.lines">
+  <app-bit-line [bitLine]="line"></app-bit-line>
+</ng-container>
