@@ -3,6 +3,13 @@
   </textarea>
   <button (click)="handleUpdateRaw()">handle raw</button>
   <button (click)="generateRaw(chunk)">generate raw</button>
+  <div class="filename">
+    שם קובץ:
+    <input #val4 (change)="updateFileName(val4.value)" [value]="filename" list="filenames">
+    <datalist id="filenames">
+      <option *ngFor="let filename of filenames" [value]="filename"></option>
+    </datalist>
+  </div>
   <div class="role">
     תפקיד:
     <input #val0 (change)="updateRole(val0.value)" [value]="collection.role">
@@ -13,7 +20,10 @@
   </div>
   <div class="sceneObjective">
     מטרת הסצנה:
-    <textarea #val2 (change)="updateSceneObjective(val2.value)" [value]="collection.sceneObjective"></textarea>
+    <input #val2 (change)="updateSceneObjective(val2.value)" [value]="collection.sceneObjective" list="sceneObjectives">
+    <datalist id="sceneObjectives">
+      <option *ngFor="let sceneObjective of sceneObjectives" [value]="sceneObjective"></option>
+    </datalist>
   </div>
 </div>
 

@@ -44,16 +44,23 @@
   z-index: 1;
 }
 
-.role {
+.filename {
   position: absolute;
   top: 0;
   right: 0;
   direction: rtl;
 }
 
-.majorNeed {
+.role {
   position: absolute;
   top: 25px;
+  right: 0;
+  direction: rtl;
+}
+
+.majorNeed {
+  position: absolute;
+  top: 50px;
   right: 0;
   direction: rtl;
 }
@@ -61,16 +68,18 @@
 .sceneObjective {
   position: absolute;
   top: 0;
-  right: 274px;
+  right: 315px;
   direction: rtl;
 }
 
+.filename input,
 .role input,
 .majorNeed input,
 .sceneObjective input {
   position: absolute;
   right: 82px;
   top:0;
+  width: 215px;
 }
 
 .sceneObjective textarea {
@@ -79,4 +88,22 @@
   right: 86px;
   width: 400px;
   height: 80px;
+}
+
+@media print {
+  .buttons {
+    display:none !important;
+  }
+  ::ng-deep .bitRoleMarker {
+    display:none !important;
+  }
+
+  .header {
+    position: relative;
+    top: 0;
+  }
+
+  ::ng-deep app-bit-chunk {
+    border-bottom:none !important;
+  }
 }

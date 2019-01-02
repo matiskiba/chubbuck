@@ -51,6 +51,7 @@ export class AppComponent {
   title = 'chubbuck';
   raw:string = "";
   role:string = "mati";
+  filename:string = "";
   collection:Bits = <any>{ role: "" };
   focusedBitContent:BitWord|BitPunctuation = null;
     @ViewChild('chunk') chunkElement: ElementRef;
@@ -89,8 +90,9 @@ export class AppComponent {
             res = res + " " + text;
         });
 
-        root.find("app-bit-chunk .obstacles textarea").each(function() {
-           let val = $(this).val().trim();
+        root.find("app-bit-chunk .obstacles .obstacleText").each(function() {
+           let val = $(this).text().trim();
+           console.log("wow",val);
            if ( val )
            {
                var chunkId = $(this).closest("app-bit-chunk").data("chunkid");
@@ -131,11 +133,27 @@ export class AppComponent {
         this.__handleUpdateRaw(res,true);
     }
 
-    handleUpdateRaw() {
-        this.__handleUpdateRaw(this.raw,true);
-    }
-
     constructor(private cdr:ChangeDetectorRef){}
+
+    updateFileName(v)
+    {
+        if ( v && this.filename != v ) {
+            this.filename = v.trim();
+            this.collection = <any>{sceneObjective:null};
+            this.sceneObjectives = [];
+            for (var i = 0; i < localStorage.length; i++){
+                if ( localStorage.key(i).match(/^collection_v2_/) ) {
+                    if ( JSON.parse(localStorage.key(i).replace("collection_v2_", "")).filename == this.filename )
+                        this.sceneObjectives.push(JSON.parse(localStorage.key(i).replace("collection_v2_", "")).sceneObject);
+                }
+            }
+
+            console.log(this.sceneObjectives);
+
+            this.updateSceneObjective("");
+            this.cdr.detectChanges();
+        }
+    }
 
     updateRole(v)
     {
@@ -154,35 +172,66 @@ export class AppComponent {
     }
     updateSceneObjective(v)
     {
-        if ( v && this.collection.sceneObjective != v ) {
+        if ( this.collection.sceneObjective != v ) {
+            this.collection.sceneObjective = v;
+            this.loadAndHandleUpdateRaw();
             this.collection.sceneObjective = v;
             this.cdr.detectChanges();
         }
     }
+    filenames = [];
+    sceneObjectives = [];
     ngAfterViewInit()
     {
-        this.__handleUpdateRaw(this.raw,false);
+        this.filenames = [];
+        for (var i = 0; i < localStorage.length; i++){
+            if ( localStorage.key(i).match(/^collection_v2_/) ) {
+                this.filenames.push(JSON.parse(localStorage.key(i).replace("collection_v2_", "")).filename);
+            }
+        }
+        this.filenames = this.filenames.filter((v, i, a) => a.indexOf(v) === i);
+
         this.cdr.detectChanges();
     }
 
-    __handleUpdateRaw(_text,update) {
-      if ( !_text.trim() ) {
-          let data = localStorage.getItem('collection');
-          if ( data )
-          {
-              data = JSON.parse(data);
-              if ( data )
-                  _text = data[data.length - 1];
-          }
-      }
+    loadAndHandleUpdateRaw() {
+        let self = this;
 
+        function load(sceneObjective: string) {
+            let data = localStorage.getItem(self.getCollectionName(sceneObjective));
+            let text = null;
+            if (data) {
+                data = JSON.parse(data);
+                if (data)
+                    text = data[data.length - 1];
+            }
+
+            return text;
+        }
+
+        let text = load(this.collection.sceneObjective);
+        if (text)
+            this.__handleUpdateRaw(text, false);
+        else
+        {
+            let text = load("");
+            if (text)
+                this.__handleUpdateRaw(text, false);
+            else
+                this.__handleUpdateRaw("", false);
+        }
+    }
+
+    __handleUpdateRaw(_text,update) {
       let globalId = 0;
 
       let text = "";
       let later = [];
       let lastRole = null;
 
-      _text.split(/(\/\/\/\*\*\*(?:[\s\S]*?)\*\*\*\/\/\/)/g).forEach(function(t){
+      _text = _text.replace(/(^[ \t]*\n)/gm, "");
+
+        _text.split(/(\/\/\/\*\*\*(?:[\s\S]*?)\*\*\*\/\/\/)/g).forEach(function(t){
           if ( t.match(/\/\/\/\*\*\*[\s\S]*\*\*\*\/\/\//) ) {
               later.push(t);
           }
@@ -226,7 +275,7 @@ export class AppComponent {
         if ( match.match(new RegExp(
               "^"+
               "(\\/\\*(BIT|SUB)([0-9]+)\\*\\/[ ]*)?"+
-              "([א-ת]+)"+
+              "(['א-ת]+)"+
               "$") ) )
         {
             role = new BitRoleChunk();
@@ -415,8 +464,12 @@ export class AppComponent {
           }
       });
 
+      console.log(this.collection);
+
+      this.raw = _text;
+
       if ( update ) {
-          let data:any = localStorage.getItem('collection');
+          let data:any = localStorage.getItem(self.getCurrentCollectionName());
           if ( data )
               data = JSON.parse(data);
 
@@ -425,7 +478,19 @@ export class AppComponent {
 
           data.push(_text);
 
-          localStorage.setItem('collection', JSON.stringify(data));
+          localStorage.setItem(self.getCurrentCollectionName(), JSON.stringify(data));
       }
+    }
+
+    private getCurrentCollectionName()
+    {
+        return this.getCollectionName(this.collection.sceneObjective);
+    }
+
+    private getCollectionName(sceneObjective:string){
+        return 'collection_v2_' + JSON.stringify({
+           filename:this.filename,
+           sceneObject:sceneObjective
+        });
     }
 }

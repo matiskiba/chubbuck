@@ -7,18 +7,18 @@
 }
 
 .role {
-  flex-basis: 50px;
+  flex-basis: 75px;
   flex-shrink: 0;
 }
 .bitRole {
-  width: 50px;
+  width: 75px;
   position: absolute;
 }
 
 app-bit-line {
-  width: calc(100% - 50px);
+  width: calc(100% - 75px);
   position: relative;
-  right: 50px;
+  right: 75px;
 }
 
 .bitRoleMarker {
@@ -27,4 +27,8 @@ app-bit-line {
 
 :host.mainRole {
   background:rgba(0,0,0,.1);
+}
+
+.bitRoleName {
+  font-style: italic;
 }

@@ -3,7 +3,7 @@
     מכשולים
   </ng-container>
   <ng-container *ngIf="bitChunk">
-    <textarea>{{appComponent.collection.obstacles[bitChunk.chunkId]}}</textarea>
+    <div class="obstacleText" contenteditable="true">{{appComponent.collection.obstacles[bitChunk.chunkId]}}</div>
   </ng-container>
 </div>
 <div class="scene">
