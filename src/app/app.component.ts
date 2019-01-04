@@ -550,6 +550,7 @@ export class AppComponent {
 
         root.find(".bitInfo").each(function() { $(this).css("top","") });
 
+        root.find(".sceneStream .bit > span").each(function() { $(this).css("margin-top","")});
         root.find(".sceneStream .bit.asNewLine > span").each(function() { $(this).css("margin-right",""); });
         root.find(".sceneStream .bit.asNewLine").removeClass("asNewLine");
 
@@ -582,7 +583,17 @@ export class AppComponent {
                 $(this).find(">span").css("margin-right",-(old_right-right)+"px");
                 cr = $(this).get(0).getBoundingClientRect();
             }
+
+            if ( lastCR && ( lastCR.y + lastCR.height ) > cr.y ) {
+                $(this).find(">span").css("margin-top", (lastCR.y + lastCR.height) - cr.y);
+                cr = $(this).get(0).getBoundingClientRect();
+            }
+
             bitInfo.css("top",cr.y-refY);
+
+            bitInfo.find(">*").each(function() {
+                cr.height = Math.max(cr.height,$(this).height());
+            });
 
             if ( lastBit )
             {
@@ -590,7 +601,7 @@ export class AppComponent {
                 var lastBitInfo = root.find(".bitInfo[data-bit-id='"+lastBitId+"']");
                 var last_cr = lastBit.find(">span").get(0).getBoundingClientRect();
 
-                lastBitInfo.css("min-height",cr.y+cr.height-last_cr.y-last_cr.height);
+                lastBitInfo.css("min-height",cr.y-last_cr.y);
             }
 
             lastBit = $(this);

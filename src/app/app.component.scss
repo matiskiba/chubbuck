@@ -172,7 +172,7 @@
   width: calc(50% - 10px);
 }
 .sceneStream {
-  top:20px;
+  top:0;
   position:relative;
   left: calc(50% / 3 * 2 + 10px);
   width: calc(50% - 75px - 10px);
@@ -184,6 +184,7 @@
 .scene-container {
   position:relative;
   width:100%;
+  overflow-y:hidden;
 }
 
 .sceneStreamGenerated {
@@ -192,7 +193,7 @@
 
 .bitInfo {
   position: absolute;
-  top: 0;
+  top: -100000000px;
   left: 0;
   width: 100%;
   direction:rtl;
@@ -220,8 +221,21 @@
   pointer-events:auto;
 }
 
+.bit > span {
+  transition: transform 0.5s;
+}
+
+.bitInfo > .marker {
+  transition: opacity 0.5s;
+}
+
+
+.bit.marked > span {
+  transform: scale(1.5);
+}
+
 .bitInfo:not(.marked) > .marker {
-  display:none;
+  opacity:0;
 }
 
 .bitInfo > .marker {
@@ -280,4 +294,13 @@
   }
 }
 
+/*
+.word,.punctuation,.newLine,.bitRoleName {
+  display:none !important;
+}
 
+.bit > span {
+  margin-right:0 !important;
+  opacity:0;
+}
+*/
