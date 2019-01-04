@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BitRoleComponent } from './bit-role.component';
+import { RoleStreamComponent } from './bit-role.component';
 
-describe('BitRoleComponent', () => {
-  let component: BitRoleComponent;
-  let fixture: ComponentFixture<BitRoleComponent>;
+describe('RoleStreamComponent', () => {
+  let component: RoleStreamComponent;
+  let fixture: ComponentFixture<RoleStreamComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BitRoleComponent ]
+      declarations: [ RoleStreamComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BitRoleComponent);
+    fixture = TestBed.createComponent(RoleStreamComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

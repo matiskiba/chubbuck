@@ -102,6 +102,166 @@
   height: 80px;
 }
 
+::ng-deep .word + .word:before {
+  content:"";
+  margin-right:0.2em;
+}
+
+::ng-deep .word + .app-bit-substitution:before {
+  content:"";
+  margin-right:0.2em;
+}
+
+::ng-deep .punctuation + :before {
+  content:"";
+  margin-right:0.2em;
+  display:inline-block;
+}
+
+.header {
+  direction:rtl;
+}
+
+.punctuation,
+.word {
+  display:inline-block;
+}
+
+.obstacle,
+.obstacles {
+  right:0;
+  width:calc(50% / 3 - 10px);
+  position:absolute;
+}
+
+.action,
+.actions {
+  right:calc(50% + 50% / 3);
+  width:calc(50% / 3 - 10px);
+  position:absolute;
+}
+
+.doing,
+.doings {
+  right:calc(50% + 50% / 3 * 2);
+  width:calc(50% / 3 - 10px);
+  position:absolute;
+}
+
+.line {
+  height:100vh;
+  position:absolute;
+  right:-5px;
+  top:0;
+  width:calc(100% + 5px);
+  border-right:1px solid black;
+  pointer-events:none;
+}
+
+.header {
+  height:1.1em;
+  border-bottom:1px solid black;
+}
+
+
+
+.scene {
+  top:0;
+  position:absolute;
+  right: calc(50% / 3);
+  width: calc(50% - 10px);
+}
+.sceneStream {
+  top:20px;
+  position:relative;
+  left: calc(50% / 3 * 2 + 10px);
+  width: calc(50% - 75px - 10px);
+  direction:rtl;
+  outline:none;
+  line-height: 1.3;
+}
+
+.scene-container {
+  position:relative;
+  width:100%;
+}
+
+.sceneStreamGenerated {
+  display:none;
+}
+
+.bitInfo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  direction:rtl;
+}
+
+.bit {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-left: 2px;
+}
+
+.bit.asNewLinePrep {
+  margin-right:10px;
+}
+
+.bitInfo {
+  min-height:1.7em;
+  pointer-events:none;
+}
+
+.bitInfo > * {
+  min-height:inherit;
+  padding-top: 0.3em;
+  outline:none;
+  pointer-events:auto;
+}
+
+.bitInfo:not(.marked) > .marker {
+  display:none;
+}
+
+.bitInfo > .marker {
+  position:absolute;
+  z-index:-1;
+  pointer-events:none;
+  width:100%;
+  height:100%;
+  left:0;
+  top:0;
+  background-color:rgba(0,0,0,.1);
+}
+
+
+.bit.asNewLine:before {
+  content:"";
+  display:block;
+}
+
+.bit > span {
+  display:inline-block;
+}
+
+
+.sceneStream .bitRoleName {
+  margin-right:-75px;
+  width:75px;
+  display:inline-block;
+  margin-top: 1.3em;
+}
+
+.sceneStream .bitRoleName:first-child {
+  padding-top:0;
+}
+
+.current {
+  background:rgba(0,0,0,.3);
+}
+
+
 @media print {
   .buttons {
     display:none !important;
@@ -119,3 +279,5 @@
     border-bottom:none !important;
   }
 }
+
+

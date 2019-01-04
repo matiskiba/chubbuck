@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {AppComponent, BitSubstitution} from "../app.component";
+import {AppComponent, BitInnerObjectSubstitution} from "../app.component";
 
 @Component({
   selector: 'app-bit-substitution',
@@ -8,7 +8,7 @@ import {AppComponent, BitSubstitution} from "../app.component";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BitSubstitutionComponent implements OnInit {
-  @Input() bitSubstitution:BitSubstitution;
+  @Input() bitInnerObjectSubstitution:BitInnerObjectSubstitution;
 
   constructor(public appComponent:AppComponent) { }
 

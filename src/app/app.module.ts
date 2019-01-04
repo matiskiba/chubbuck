@@ -5,18 +5,20 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BitChunkComponent } from './bit-chunk/bit-chunk.component';
-import { BitRoleComponent } from './bit-role/bit-role.component';
+import { RoleStreamComponent } from "./bit-role/role-stream.component";
 import { BitLineComponent } from './bit-line/bit-line.component';
 import { BitWordComponent } from './bit-word/bit-word.component';
 import { BitPunctuationComponent } from './bit-punctuation/bit-punctuation.component';
 import {ContextMenuModule, ContextMenuService} from "ngx-contextmenu";
 import { BitSubstitutionComponent } from './bit-substitution/bit-substitution.component';
+import {EscapeHtmlPipe} from "./keep-html.pipe";
 
 @NgModule({
   declarations: [
-    AppComponent,
+      EscapeHtmlPipe,
+      AppComponent,
     BitChunkComponent,
-    BitRoleComponent,
+    RoleStreamComponent,
     BitLineComponent,
     BitWordComponent,
     BitPunctuationComponent,

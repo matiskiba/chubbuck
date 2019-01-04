@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, ChangeDetectionStrategy} from '@angular/core';
-import {BitPunctuation} from "../app.component";
+import {Punctuation} from "../app.component";
 
 @Component({
   selector: 'app-bit-punctuation',
@@ -8,7 +8,7 @@ import {BitPunctuation} from "../app.component";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BitPunctuationComponent implements OnInit {
-  @Input() bitPunctuation:BitPunctuation;
+  @Input() punctuation:Punctuation;
 
   constructor() { }
 

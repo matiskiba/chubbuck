@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, ChangeDetectionStrategy} from '@angular/core';
-import {AppComponent, BitWord} from "../app.component";
+import {AppComponent, Word} from "../app.component";
 
 @Component({
   selector: 'app-bit-word',
@@ -12,7 +12,7 @@ import {AppComponent, BitWord} from "../app.component";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BitWordComponent implements OnInit {
-  @Input() bitWord:BitWord;
+  @Input() word:Word;
   self:BitWordComponent;
 
   constructor(public appComponent:AppComponent) {

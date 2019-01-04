@@ -31,10 +31,67 @@
   </div>
 </div>
 
-<div #chunk *ngIf="collection">
-  <app-bit-chunk [bitChunk]="null" class="header"></app-bit-chunk>
-  <ng-container *ngFor="let chunk of collection.chunks">
-    <app-bit-chunk [bitChunk]="chunk"></app-bit-chunk>
+<div class="header">
+  <div class="obstacles">
+    <div class="line"></div>
+    מכשולים
+  </div>
+  <div class="scene">
+    <div class="line"></div>
+    סצנה
+  </div>
+  <div class="actions">
+    <div class="line"></div>
+    פעולות/כוונות
+  </div>
+  <div class="doings">
+    <div class="line"></div>
+    מעשים
+  </div>
+</div>
+<div class="scene-container" #chunk *ngIf="collection">
+  <!--<app-bit-chunk [bitChunk]="null" class="header"></app-bit-chunk>-->
+  <div class="sceneStream" contenteditable="true" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  </div>
+  <div class="sceneStreamGenerated">
+    <ng-container *ngFor="let roleStream of collection.roleStreams">
+      <div class="bitRole bitRoleName" contenteditable="false">
+        {{roleStream.role}}
+      </div>
+      <ng-container *ngFor="let part of roleStream.stream">
+        <ng-container *ngIf="part.constructor.name == 'Word'">
+          <span class="word">{{part.value}}</span>
+        </ng-container>
+        <ng-container *ngIf="part.constructor.name == 'Punctuation'">
+          <span class="punctuation">{{part.value}}</span>
+        </ng-container>
+        <ng-container *ngIf="part.constructor.name == 'NewLine'">
+          <span class="newLine" contenteditable="false"><br></span>
+        </ng-container>
+        <ng-container *ngIf="part.constructor.name == 'Bit'">
+          <span class="bit" contenteditable="false" [attr.data-bit-id]="part.bitId"><span>/</span></span>
+        </ng-container>
+        <ng-container *ngIf="part.constructor.name == 'BitInnerObjectSubstitution'">
+          <app-bit-substitution contenteditable="false" [bitInnerObjectSubstitution]="part" [attr.data-substitutionid]="part.innerObjectSubstitutionId">
+          </app-bit-substitution>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
+  <ng-container *ngFor="let roleStream of collection.roleStreams">
+    <ng-container *ngFor="let part of roleStream.stream">
+      <ng-container *ngIf="part.constructor.name == 'Bit'">
+        <div class="bitInfo" [attr.data-bit-id]="part.bitId">
+          <div class="marker"></div>
+          <div class="obstacle" contenteditable="true" [innerHTML]="collection.obstacles[part.bitId] | keepHtml">
+          </div>
+          <div class="action" contenteditable="true" [innerHTML]="collection.actions[part.bitId] | keepHtml">
+          </div>
+          <div class="doing" contenteditable="true" [innerHTML]="collection.doings[part.bitId] | keepHtml">
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
   </ng-container>
 </div>
 

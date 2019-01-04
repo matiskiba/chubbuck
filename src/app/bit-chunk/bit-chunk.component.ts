@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, ChangeDetectionStrategy} from '@angular/core';
-import {AppComponent, BitChunk} from "../app.component";
+import {AppComponent} from "../app.component";
 
 @Component({
   selector: 'app-bit-chunk',
@@ -11,7 +11,7 @@ import {AppComponent, BitChunk} from "../app.component";
     },
 })
 export class BitChunkComponent implements OnInit {
-  @Input() bitChunk:BitChunk;
+  //@Input() bitChunk:BitChunk;
 
   constructor(public appComponent:AppComponent) { }
 

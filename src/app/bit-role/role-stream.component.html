@@ -1,0 +1,22 @@
+<div class="bitRole bitRoleName">
+  {{roleStream.role}}
+</div>
+<div class="stream">
+  <ng-container *ngFor="let part of roleStream.stream">
+    <ng-container *ngIf="part.constructor.name == 'Word'">
+      <span class="word">{{part.value}}</span>
+    </ng-container>
+    <ng-container *ngIf="part.constructor.name == 'Punctuation'">
+      <span class="punctuation">{{part.value}}</span>
+    </ng-container>
+    <ng-container *ngIf="part.constructor.name == 'NewLine'">
+      <span class="newLine"><br></span>
+    </ng-container>
+    <ng-container *ngIf="part.constructor.name == 'BitInnerObjectSubstitution'">
+      <app-bit-substitution contenteditable="false" [bitInnerObjectSubstitution]="part" [attr.data-substitutionid]="part.innerObjectSubstitutionId">
+      </app-bit-substitution>
+    </ng-container>
+  </ng-container>
+</div>
+<!--
+-->
