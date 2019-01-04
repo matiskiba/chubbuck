@@ -25,6 +25,10 @@
       <option *ngFor="let sceneObjective of sceneObjectives" [value]="sceneObjective"></option>
     </datalist>
   </div>
+  <div class="substitution">
+    תחליף:
+    <input #val5 (change)="updateSubstitution(val5.value)" [value]="collection.substitution">
+  </div>
 </div>
 
 <div #chunk *ngIf="collection">

@@ -14,8 +14,8 @@
     <ng-container *ngIf="part.constructor.name == 'BitPunctuation'">
       <span class="app-bit-punctuation">{{part.value}}</span>
     </ng-container>
-    <ng-container *ngIf="part.constructor.name == 'BitSubstitution'">
-      <app-bit-substitution contenteditable="false" [bitSubstitution]="part" [attr.data-substitutionid]="part.substitutionId">
+    <ng-container *ngIf="part.constructor.name == 'BitInnerObjectSubstitution'">
+      <app-bit-substitution contenteditable="false" [bitSubstitution]="part" [attr.data-substitutionid]="part.innerObjectSubstitutionId">
       </app-bit-substitution>
     </ng-container>
   </ng-container>

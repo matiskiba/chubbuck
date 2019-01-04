@@ -72,14 +72,26 @@
   direction: rtl;
 }
 
+.substitution {
+  position: absolute;
+  top: 25px;
+  right: 315px;
+  direction: rtl;
+}
+
 .filename input,
 .role input,
 .majorNeed input,
+.substitution input,
 .sceneObjective input {
   position: absolute;
   right: 82px;
   top:0;
   width: 215px;
+}
+
+.sceneObjective input {
+  width: 300px;
 }
 
 .sceneObjective textarea {

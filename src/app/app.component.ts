@@ -9,13 +9,13 @@ export class BitWord {
   value:string;
 }
 
-export class BitSubstitution {
-    substitutionId:number;
+export class BitInnerObjectSubstitution {
+    innerObjectSubstitutionId:number;
 }
 
 
 export class BitLine {
-  content:Array<BitWord|BitPunctuation|BitSubstitution>;
+  content:Array<BitWord|BitPunctuation|BitInnerObjectSubstitution>;
   first:boolean;
 }
 
@@ -35,8 +35,9 @@ export class Bits {
     role:string;
     majorNeed:string;
     sceneObjective:string;
+    substitution:string;
     obstacles:{ [key: number]: string; };
-    substitutions:{ [key: number]: string; };
+    innerObjectSubstitutions:{ [key: number]: string; };
     actions:{ [key: number]: string; };
     doings:{ [key: number]: string; };
 }
@@ -120,17 +121,22 @@ export class AppComponent {
             if ( val )
             {
                 var chunkId = $(this).closest("app-bit-substitution").data("substitutionid");
-                res = res + "///***substitution:" + chunkId + ":" + val + "***///"
+                res = res + "///***innerObjectSubstitution:" + chunkId + ":" + val + "***///"
             }
         });
 
         res = res + "///***role:0:" + this.collection.role + "***///";
         res = res + "///***majorNeed:0:" + this.collection.majorNeed + "***///";
+        res = res + "///***substitution:0:" + this.collection.substitution + "***///";
         res = res + "///***sceneObjective:0:" + this.collection.sceneObjective + "***///";
 
         //console.log(res);
 
         this.__handleUpdateRaw(res,true);
+    }
+
+    handleUpdateRaw() {
+        this.__handleUpdateRaw(this.raw,false);
     }
 
     constructor(private cdr:ChangeDetectorRef){}
@@ -159,6 +165,14 @@ export class AppComponent {
     {
         if ( v && this.collection.role != v ) {
             this.collection.role = v;
+            this.cdr.detectChanges();
+        }
+    }
+
+    updateSubstitution(v)
+    {
+        if ( v && this.collection.substitution != v ) {
+            this.collection.substitution = v;
             this.cdr.detectChanges();
         }
     }
@@ -229,6 +243,8 @@ export class AppComponent {
       let later = [];
       let lastRole = null;
 
+      let overrideSceneObjective = !update ? this.collection.sceneObjective : null;
+
       _text = _text.replace(/(^[ \t]*\n)/gm, "");
 
         _text.split(/(\/\/\/\*\*\*(?:[\s\S]*?)\*\*\*\/\/\/)/g).forEach(function(t){
@@ -254,7 +270,7 @@ export class AppComponent {
       this.collection.obstacles = {};
       this.collection.actions = {};
       this.collection.doings = {};
-      this.collection.substitutions = {};
+      this.collection.innerObjectSubstitutions = {};
 
       let chunk = new BitChunk();
       chunk.chunkId = globalId++;
@@ -407,16 +423,16 @@ export class AppComponent {
                 return;
             }
             else if ( group = part.match((/\/\*SUB([0-9]+)\*\//))) {
-                let subsctitution = new BitSubstitution();
-                subsctitution.substitutionId = parseInt(group[1])
+                let subsctitution = new BitInnerObjectSubstitution();
+                subsctitution.innerObjectSubstitutionId = parseInt(group[1])
                 bitLine.content.push(subsctitution)
             }
             else if ( part == "$$$")
             {
-                let subsctitution = new BitSubstitution();
-                subsctitution.substitutionId = globalId++;
+                let subsctitution = new BitInnerObjectSubstitution();
+                subsctitution.innerObjectSubstitutionId = globalId++;
                 bitLine.content.push(subsctitution)
-                self.collection.substitutions[subsctitution.substitutionId] = "תחליף";
+                self.collection.innerObjectSubstitutions[subsctitution.innerObjectSubstitutionId] = "תחליף";
             }
             else if ( part.match(/^[א-ת'"0-9a-z]+$/) )
             {
@@ -433,6 +449,9 @@ export class AppComponent {
           });
       });
 
+      if ( overrideSceneObjective )
+          self.collection.sceneObjective = overrideSceneObjective;
+
       later.forEach(function(l) {
           let group;
           if ( group = l.match(/\/\/\/\*\*\*([a-zA-Z]+):([0-9]+):([\s\S]*)\*\*\*\/\/\//) ) {
@@ -442,14 +461,18 @@ export class AppComponent {
                   case "role":
                       self.collection.role = group[3];
                       break;
+                  case "substitution":
+                      self.collection.substitution = group[3];
+                      break;
                   case "majorNeed":
                       self.collection.majorNeed = group[3];
                       break;
                   case "sceneObjective":
+                      if ( !overrideSceneObjective )
                       self.collection.sceneObjective = group[3];
                       break;
-                  case "substitution":
-                      self.collection.substitutions[id] = group[3];
+                  case "innerObjectSubstitution":
+                      self.collection.innerObjectSubstitutions[id] = group[3];
                       break;
                   case "obstacle":
                       self.collection.obstacles[id] = group[3];
