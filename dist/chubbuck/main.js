@@ -391,6 +391,8 @@ var AppComponent = /** @class */ (function () {
         var self = this;
         var first = true;
         var roleName = this.collection.role;
+        if (!roleName)
+            roleName = "";
         this.collection = new Scene();
         this.collection.role = roleName;
         this.collection.obstacles = {};
@@ -398,6 +400,9 @@ var AppComponent = /** @class */ (function () {
         this.collection.doings = {};
         this.collection.innerObjectSubstitutions = {};
         this.collection.roleStreams = [];
+        this.collection.sceneObjective = "";
+        this.collection.substitution = "";
+        this.collection.majorNeed = "";
         var roleStream = null;
         var lines = text.split("\n");
         lines.forEach(function (line) {

@@ -341,6 +341,8 @@ export class AppComponent {
       let first = true;
 
       let roleName = this.collection.role;
+      if ( !roleName )
+          roleName = "";
 
       this.collection = new Scene();
       this.collection.role = roleName;
@@ -349,6 +351,9 @@ export class AppComponent {
       this.collection.doings = {};
       this.collection.innerObjectSubstitutions = {};
       this.collection.roleStreams = [];
+      this.collection.sceneObjective = "";
+      this.collection.substitution = "";
+      this.collection.majorNeed = "";
 
       let roleStream = null;
 
