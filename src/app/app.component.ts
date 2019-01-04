@@ -67,7 +67,7 @@ export class AppComponent {
     @ViewChild('chunk') chunkElement: ElementRef;
 
 
-    generateRaw()
+    generateRaw ()
     {
         this.retainScroll = $("html").scrollTop();
 

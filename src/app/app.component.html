@@ -2,7 +2,7 @@
   <textarea [(ngModel)]="raw">
   </textarea>
   <button (click)="handleUpdateRaw()">handle raw</button>
-  <button (click)="generateRaw(chunk)">generate raw</button>
+  <button (click)="generateRaw()">generate raw</button>
   <div class="filename">
     שם קובץ:
     <input #val4 (change)="updateFileName(val4.value)" [value]="filename" list="filenames">
