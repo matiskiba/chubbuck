@@ -12,6 +12,7 @@ import { BitPunctuationComponent } from './bit-punctuation/bit-punctuation.compo
 import {ContextMenuModule, ContextMenuService} from "ngx-contextmenu";
 import { BitSubstitutionComponent } from './bit-substitution/bit-substitution.component';
 import {EscapeHtmlPipe} from "./keep-html.pipe";
+import { NullComponentComponent } from './null-component/null-component.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import {EscapeHtmlPipe} from "./keep-html.pipe";
     BitLineComponent,
     BitWordComponent,
     BitPunctuationComponent,
-    BitSubstitutionComponent
+    BitSubstitutionComponent,
+    NullComponentComponent
   ],
   imports: [
       ContextMenuModule,

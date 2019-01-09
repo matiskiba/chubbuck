@@ -29,11 +29,28 @@
     תחליף:
     <input #val5 (change)="updateSubstitution(val5.value)" [value]="collection.substitution">
   </div>
+  <div class="step">
+    צעד:
+    <select [(ngModel)]="step">
+      <option value="0">שאר השלבים</option>
+      <option value="3">מכשולים בסצנה</option>
+      <option value="7">רגע לפני</option>
+    </select>
+  </div>
+  <div class="default">
+    ברירת מחדל:
+    <input type="checkbox" #val25 (change)="updateDefault(val25.checked)" [checked]="collection.default">
+  </div>
+</div>
+
+<div class="sceneObstacles">
+  מטרת הסצנה:
+  <div class="sceneObstacleContent" contenteditable="true" [innerHTML]="collection.sceneObstacles | keepHtml">
+  </div>
 </div>
 
 <div class="header">
   <div class="obstacles">
-    <div class="line"></div>
     מכשולים
   </div>
   <div class="scene">
@@ -47,6 +64,10 @@
   <div class="doings">
     <div class="line"></div>
     מעשים
+  </div>
+  <div class="inner_monologues">
+    <div class="line"></div>
+    מונולוג פנימי
   </div>
 </div>
 <div class="scene-container" #chunk *ngIf="collection">
@@ -88,6 +109,8 @@
           <div class="action" contenteditable="true" [innerHTML]="collection.actions[part.bitId] | keepHtml">
           </div>
           <div class="doing" contenteditable="true" [innerHTML]="collection.doings[part.bitId] | keepHtml">
+          </div>
+          <div class="inner_monologue" contenteditable="true" [innerHTML]="collection.inner_monologues[part.bitId] | keepHtml">
           </div>
         </div>
       </ng-container>

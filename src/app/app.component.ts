@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
 import * as $ from 'jquery';
+import {ActivatedRoute, Route, Router} from "@angular/router";
 
 export class Punctuation {
   value:string;
@@ -43,19 +44,25 @@ export class Scene {
     roleStreams:Array<RoleStream>;
     role:string;
     majorNeed:string;
+    default:boolean;
+    sceneObstacles:string;
     sceneObjective:string;
     substitution:string;
     obstacles:{ [key: number]: string; };
     innerObjectSubstitutions:{ [key: number]: string; };
     actions:{ [key: number]: string; };
     doings:{ [key: number]: string; };
+    inner_monologues:{ [key: number]: string; };
 }
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+      "[attr.step]":"step"
+    }
 })
 export class AppComponent {
   title = 'chubbuck';
@@ -63,13 +70,14 @@ export class AppComponent {
   role:string = "mati";
   filename:string = "";
   collection:Scene = <any>{ role: "" };
+  step:string = "0";
   //focusedBitContent:BitWord|BitPunctuation = null;
     @ViewChild('chunk') chunkElement: ElementRef;
 
 
     generateRaw ()
     {
-        this.retainScroll = $("html").scrollTop();
+        this.retainScroll = $(".scene-container").scrollTop();
 
         var flag = false;
         var res = "";
@@ -131,16 +139,18 @@ export class AppComponent {
             }
         });
 
-        root.find("app-bit-substitution > div").each(function () {
+        root.find(".sceneStream app-bit-substitution > div").each(function () {
             let val = $(this).text().trim();
             if (val) {
                 var chunkId = $(this).closest("app-bit-substitution").data("substitutionid");
                 res = res + "///***innerObjectSubstitution:" + chunkId + ":" + val + "***///"
             }
         });
-
+        
         res = res + "///***role:0:" + this.collection.role + "***///";
         res = res + "///***majorNeed:0:" + this.collection.majorNeed + "***///";
+        res = res + "///***default:0:" + (this.collection.default?"1":"0") + "***///";
+        res = res + "///***sceneObstacles:0:" + $(this.hostElement.nativeElement).find(".sceneObstacleContent").html() + "***///";
         res = res + "///***substitution:0:" + this.collection.substitution + "***///";
         res = res + "///***sceneObjective:0:" + this.collection.sceneObjective + "***///";
 
@@ -157,19 +167,24 @@ export class AppComponent {
 
     retainScroll=null;
 
-    constructor(private cdr:ChangeDetectorRef){
+    constructor(private cdr:ChangeDetectorRef, private hostElement:ElementRef, private router:Router, private route:ActivatedRoute){
         var self = this;
+
+        this.route.paramMap.subscribe(params=> {
+            console.log("params",params);
+        });
 
         $(window).on("resize",function() {
             setTimeout(function() {
-                self.retainScroll = $("html").scrollTop();
+                //self.retainScroll = $("html").scrollTop();
                 self.__updatePositions();
             },0);
         })
 
-        $(document).on("input",".sceneStream",window["_"].throttle(function() {
+        $(document).on("input",".sceneStream,.bitInfo",window["_"].throttle(function() {
             setTimeout(function() {
-                self.retainScroll = $("html").scrollTop();
+                //self.retainScroll = $("html").scrollTop();
+                console.log("self.retainScroll in",self.retainScroll);
                 self.__updatePositions();
             },0);
         },250))
@@ -218,9 +233,11 @@ export class AppComponent {
         });
     }
 
-    updateFileName(v)
+    updateFileName(v,sceneObjective=null)
     {
         if ( v && this.filename != v ) {
+            this.router.navigate([this.filename]);
+
             this.filename = v.trim();
             this.collection = <any>{sceneObjective:null};
             this.sceneObjectives = [];
@@ -233,9 +250,14 @@ export class AppComponent {
 
             console.log(this.sceneObjectives);
 
-            this.updateSceneObjective("");
+            this.updateSceneObjective(sceneObjective?sceneObjective:"");
             this.cdr.detectChanges();
         }
+    }
+
+    updateDefault(v)
+    {
+        this.collection.default = v;
     }
 
     updateRole(v)
@@ -268,6 +290,8 @@ export class AppComponent {
             this.loadAndHandleUpdateRaw();
             this.collection.sceneObjective = v;
             this.cdr.detectChanges();
+
+            this.router.navigate([this.filename,this.collection.sceneObjective]);
         }
     }
     filenames = [];
@@ -349,11 +373,13 @@ export class AppComponent {
       this.collection.obstacles = {};
       this.collection.actions = {};
       this.collection.doings = {};
+      this.collection.inner_monologues = {};
       this.collection.innerObjectSubstitutions = {};
       this.collection.roleStreams = [];
       this.collection.sceneObjective = "";
       this.collection.substitution = "";
       this.collection.majorNeed = "";
+      this.collection.default = false;
 
       let roleStream = null;
 
@@ -426,6 +452,7 @@ export class AppComponent {
                 self.collection.obstacles[bit.bitId] = "";
                 self.collection.actions[bit.bitId] = "";
                 self.collection.doings[bit.bitId] = "";
+                self.collection.inner_monologues[bit.bitId] = "";
                 roleStream.stream.push(bit);
             }
             else if ( part == "///")
@@ -435,6 +462,7 @@ export class AppComponent {
                 self.collection.obstacles[bit.bitId] = "";
                 self.collection.actions[bit.bitId] = "";
                 self.collection.doings[bit.bitId] = "";
+                self.collection.inner_monologues[bit.bitId] = "";
                 roleStream.stream.push(bit);
             }
             else if ( group = part.match((/\/\*SUB([0-9]+)\*\//))) {
@@ -482,8 +510,14 @@ export class AppComponent {
                   case "substitution":
                       self.collection.substitution = group[3];
                       break;
+                  case "sceneObstacles":
+                      self.collection.sceneObstacles = group[3];
+                      break;
                   case "majorNeed":
                       self.collection.majorNeed = group[3];
+                      break;
+                  case "default":
+                      self.collection.default = parseInt(group[3]) == 1;
                       break;
                   case "sceneObjective":
                       if ( !overrideSceneObjective )
@@ -500,6 +534,9 @@ export class AppComponent {
                       break;
                   case "doing":
                       self.collection.doings[id] = group[3];
+                      break;
+                  case "inner_monologue":
+                      self.collection.inner_monologues[id] = group[3];
                       break;
               }
           }
@@ -548,62 +585,84 @@ export class AppComponent {
     __updatePositions() {
         var root = $(this.chunkElement.nativeElement);
 
-        root.find(".bitInfo").each(function() { $(this).css("top","") });
-
-        root.find(".sceneStream .bit > span").each(function() { $(this).css("margin-top","")});
-        root.find(".sceneStream .bit.asNewLine > span").each(function() { $(this).css("margin-right",""); });
-        root.find(".sceneStream .bit.asNewLine").removeClass("asNewLine");
-
-        $("html").scrollTop(0);
+        //$("html").scrollTop(0);
         
         var self = this;
 
         var lastCR = null;
         var lastBit = null;
 
-        var refY = root.get(0).getBoundingClientRect().y;
+        console.log($(".scene-container").scrollTop());
+        var st = root.scrollTop();
+        root.css("height","auto");
 
+        root.find(".bitInfo").each(function() { $(this).css("top","").css("min-height","") });
+
+        root.find(".sceneStream .bit > span").each(function() { $(this).css("margin-top","")});
+        root.find(".sceneStream .bit.asNewLine > span").each(function() { $(this).css("margin-right",""); });
+        root.find(".sceneStream .bit.asNewLine").removeClass("asNewLine");
+
+        //root.scrollTop(0);
+        var refY = root.find(">*:first-child").offset().top;
+
+        function gbcr(elm)
+        {
+            var cr:any = {};
+            var offset = $(elm).offset();
+            cr.y = offset.top - refY;
+            cr.x = offset.left;
+            cr.width = $(elm).width();
+            cr.height = $(elm).height();
+            return cr;
+        }
         root.find(".sceneStream .bit").each(function() {
-            var cr = $(this).get(0).getBoundingClientRect();
+
+            var cr = gbcr($(this).find(">span"));
             var bitInfo = root.find(".bitInfo[data-bit-id='"+$(this).data("bit-id")+"']");
 
-            if ( lastCR && (lastCR.y+lastCR.height)>cr.y ) {
+            console.log("----",$(this).data("bit-id"),$(this).get(0),$(this).find(">span").get(0));
+
+            if ( lastCR && (lastCR.y+lastCR.height - 1)>cr.y ) {
                 $(this).addClass("asNewLinePrep");
-                cr = $(this).get(0).getBoundingClientRect();
+                cr = gbcr($(this).find(">span"));
                 $(this).removeClass("asNewLinePrep");
 
                 $(this).addClass("asNewLine")
                 var cr_old = cr;
                 var old_right = cr_old.x + cr_old.width;
 
-                cr = $(this).get(0).getBoundingClientRect();
+                cr = gbcr($(this).find(">span"));
                 var right = cr.x + cr.width;
 
                 //console.log(right,old_right,$(this).get(0));
                 $(this).find(">span").css("margin-right",-(old_right-right)+"px");
-                cr = $(this).get(0).getBoundingClientRect();
+                cr = gbcr($(this).find(">span"));
+                console.log("new line...");
             }
 
-            if ( lastCR && ( lastCR.y + lastCR.height ) > cr.y ) {
+            if ( lastCR && ( lastCR.y + lastCR.height - 1 ) > cr.y ) {
+                //console.log("wow",cr.y);
                 $(this).find(">span").css("margin-top", (lastCR.y + lastCR.height) - cr.y);
-                cr = $(this).get(0).getBoundingClientRect();
+                cr = gbcr($(this).find(">span"));
             }
 
-            bitInfo.css("top",cr.y-refY);
+            bitInfo.css("top",cr.y);
 
+            //console.log(cr.height,bitInfo.height(),bitInfo.attr("style"));
             bitInfo.find(">*").each(function() {
-                cr.height = Math.max(cr.height,$(this).height());
+                cr.height = Math.max(cr.height,$(this).innerHeight());
             });
 
             if ( lastBit )
             {
                 var lastBitId = lastBit.data("bit-id");
                 var lastBitInfo = root.find(".bitInfo[data-bit-id='"+lastBitId+"']");
-                var last_cr = lastBit.find(">span").get(0).getBoundingClientRect();
+                var last_cr = gbcr(lastBit.find(">span"));
 
                 lastBitInfo.css("min-height",cr.y-last_cr.y);
             }
 
+            console.log(cr.height,cr);
             lastBit = $(this);
             lastCR = cr;
         });
@@ -612,16 +671,22 @@ export class AppComponent {
         {
             var lastBitId = lastBit.data("bit-id");
             var lastBitInfo = root.find(".bitInfo[data-bit-id='"+lastBitId+"']");
-            var last_cr = lastBit.find(">span").get(0).getBoundingClientRect();
+            var last_cr = gbcr(lastBit.find(">span"));
 
-            var final_cr = root.find(".sceneStream > ").last().get(0).getBoundingClientRect();
+            var final_cr = gbcr(root.find(".sceneStream > *").last());
 
             lastBitInfo.css("min-height",final_cr.y+final_cr.height-last_cr.y);
         }
 
+        root.css("height","");
+        root.scrollTop(st);
+
+        console.log("st",st);
+
         if ( self.retainScroll )
         {
-            $("html").scrollTop(self.retainScroll);
+            root.scrollTop(self.retainScroll);
+            console.log("self.retainScroll out",$("html").scrollTop());
             self.retainScroll = null;
         }
     }

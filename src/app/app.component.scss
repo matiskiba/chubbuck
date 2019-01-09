@@ -40,7 +40,7 @@
   top: 90px;
   background: white;
   /* display: inline; */
-  width: 100%;
+  width: calc(100% - 15px);
   z-index: 1;
 }
 
@@ -72,6 +72,22 @@
   direction: rtl;
 }
 
+.default {
+  position: absolute;
+  top: 0;
+  right: 715px;
+  direction: rtl;
+}
+
+.sceneObstacles {
+  background:rgba(0,0,0,.1);
+  direction:rtl;
+}
+
+.sceneObstacleContent {
+  min-height:200px;
+}
+
 .substitution {
   position: absolute;
   top: 25px;
@@ -79,6 +95,15 @@
   direction: rtl;
 }
 
+.step {
+  position: absolute;
+  top: 50px;
+  right: 315px;
+  direction: rtl;
+}
+
+
+.step select,
 .filename input,
 .role input,
 .majorNeed input,
@@ -130,21 +155,28 @@
 .obstacle,
 .obstacles {
   right:0;
-  width:calc(50% / 3 - 10px);
+  width:calc(60% / 4 - 10px);
   position:absolute;
 }
 
 .action,
 .actions {
-  right:calc(50% + 50% / 3);
-  width:calc(50% / 3 - 10px);
+  right:calc(40% + 60% / 4);
+  width:calc(60% / 4 - 10px);
   position:absolute;
 }
 
 .doing,
 .doings {
-  right:calc(50% + 50% / 3 * 2);
-  width:calc(50% / 3 - 10px);
+  right:calc(40% + 60% / 4 * 2);
+  width:calc(60% / 4 - 10px);
+  position:absolute;
+}
+
+.inner_monologue,
+.inner_monologues {
+  right:calc(40% + 60% / 4 * 3);
+  width:calc(60% / 4 - 10px);
   position:absolute;
 }
 
@@ -164,27 +196,29 @@
 }
 
 
-
 .scene {
   top:0;
   position:absolute;
-  right: calc(50% / 3);
-  width: calc(50% - 10px);
+  right: calc(60% / 4);
+  width: calc(40% - 10px);
 }
 .sceneStream {
   top:0;
   position:relative;
-  left: calc(50% / 3 * 2 + 10px);
-  width: calc(50% - 75px - 10px);
+  left: calc(60% / 4 * 3 + 10px - 5px);
+  width: calc(40% - 75px - 10px);
   direction:rtl;
   outline:none;
   line-height: 1.3;
 }
 
 .scene-container {
-  position:relative;
-  width:100%;
-  overflow-y:hidden;
+  position: fixed;
+  left: 0;
+  top: 120px;
+  height: calc(100vh - 120px);
+  width: 100vw;
+  overflow-y: scroll;
 }
 
 .sceneStreamGenerated {
@@ -195,7 +229,7 @@
   position: absolute;
   top: -100000000px;
   left: 0;
-  width: 100%;
+  width: calc(100% - 5px);
   direction:rtl;
 }
 
@@ -219,10 +253,12 @@
   padding-top: 0.3em;
   outline:none;
   pointer-events:auto;
+  box-sizing:border-box;
 }
 
 .bit > span {
   transition: transform 0.5s;
+  display:inline-block;
 }
 
 .bitInfo > .marker {
@@ -304,3 +340,12 @@
   opacity:0;
 }
 */
+
+:host:not([step="0"]) .header,
+:host:not([step="0"]) .scene-container {
+  display:none !important;
+}
+
+:host:not([step="3"]) .sceneObstacles {
+  display:none !important;
+}
